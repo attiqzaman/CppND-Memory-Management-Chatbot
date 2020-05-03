@@ -44,6 +44,74 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+// Copy Ctor
+ChatBot::ChatBot(const ChatBot& other){
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+
+    _currentNode = other._currentNode;
+    _chatLogic = other._chatLogic;
+    // _chatLogic->SetChatbotHandle(this);
+    _rootNode = other._rootNode;
+
+    _image =  new wxBitmap(*other._image);
+    // *_image = *other._image;
+}
+
+ChatBot::ChatBot(ChatBot&& other){
+    std::cout << "ChatBot Move Constructor" << std::endl;
+
+    _currentNode = other._currentNode;
+    _chatLogic = other._chatLogic;
+    // _chatLogic->SetChatbotHandle(this);
+    _rootNode = other._rootNode;
+    _image =  other._image;
+    other._currentNode = nullptr;
+    // other._chatLogic->SetChatbotHandle(nullptr);
+    other._chatLogic = nullptr;
+    other._rootNode = nullptr;
+    other._image = NULL;
+}
+
+ChatBot& ChatBot::operator=(const ChatBot& other){
+    std::cout << "ChatBot Copy Assignment Operator" << std::endl;
+    
+    if (&other != this)
+    {
+        delete _image;
+        
+        _currentNode = other._currentNode;
+        _chatLogic = other._chatLogic;
+        // _chatLogic->SetChatbotHandle(this);
+        _rootNode = other._rootNode;
+        _image =  new wxBitmap(*other._image);
+        // *_image = *other._image;
+    }
+    
+    return *this;
+}
+
+ChatBot& ChatBot::operator=(ChatBot&& other){
+    std::cout << "ChatBot Move Assignment Operator" << std::endl;
+    
+    if (&other != this)
+    {
+        delete _image;
+
+        _currentNode = other._currentNode;
+        _chatLogic = other._chatLogic;
+        // _chatLogic->SetChatbotHandle(this);
+        _rootNode = other._rootNode;
+        _image =  other._image;
+
+        other._currentNode = nullptr;
+        // other._chatLogic->SetChatbotHandle(nullptr);
+        other._chatLogic = nullptr;
+        other._rootNode = nullptr;
+        other._image = NULL;
+    }
+    
+    return *this;
+}
 
 ////
 //// EOF STUDENT CODE
@@ -94,6 +162,7 @@ void ChatBot::SetCurrentNode(GraphNode *node)
     std::string answer = answers.at(dis(generator));
 
     // send selected node answer to user
+    _chatLogic->SetChatbotHandle(this);
     _chatLogic->SendMessageToUser(answer);
 }
 
